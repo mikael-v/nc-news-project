@@ -1,6 +1,6 @@
 # Northcoders News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+To clone and run the project locally, create two .env files (one for .env.development and another for .env.test). Into each, add PGDATABASE=[database name taken from sql.setup], with the test file adding the database that includes the word test, and the development file using the other database name available in sql.setup. 
 
 
 
