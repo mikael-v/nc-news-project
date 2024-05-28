@@ -18,9 +18,9 @@ describe('/api/topics', () => {
             .get('/api/topics')
             .expect(200)
             .then((response) => {
-                const topicsData = response.body.topics.topicData
-                expect(topicsData.length).toBe(3);
-                topicsData.forEach((topic) => {
+                const topics = response.body.topics.topicData
+                expect(topics.length).toBe(3);
+                topics.forEach((topic) => {
                     expect(typeof topic.slug).toBe('string');
                     expect(typeof topic.description).toBe('string');
                   });
