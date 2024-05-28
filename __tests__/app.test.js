@@ -13,7 +13,7 @@ describe('/api/topics', () => {
             .get('/api/topics')
             .expect(200)
             .then((response) => {
-                const topics = response.body.topics.topicData
+                const topics = response.body.topics
                 expect(topics.length).toBe(3);
                 topics.forEach((topic) => {
                     expect(typeof topic.slug).toBe('string');
