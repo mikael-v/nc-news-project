@@ -8,12 +8,7 @@ beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
 describe('/api/topics', () => {
-    test('Returns status code 200 when GET request to /api/topics is made', () => {
-        return request(app)
-        .get('/api/topics')
-        .expect(200)
-    });
-    test('Responds with array containing the correct properties ', () => {
+    test('Returns 20- status code and responds with array containing the correct properties ', () => {
         return request(app)
             .get('/api/topics')
             .expect(200)
