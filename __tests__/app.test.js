@@ -4,6 +4,7 @@ const db = require('../db/connection.js');
 const seed = require('../db/seeds/seed.js');
 const testData = require('../db/data/test-data')
 const endpoints = require('../endpoints.json');
+require('jest-sorted')
 
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
@@ -74,3 +75,36 @@ describe('/api/articles/:article_id', () => {
         })
     });
 });
+
+describe('/api/articles', () => {
+    test('Returns 200 status code and responds with array containing the correct properties ', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then((response) => {
+            const articles = response.body.articles
+            expect(articles.length).toBe(13);
+            articles.forEach((article) => {
+                expect(article).toMatchObject({
+                    article_id: expect.any(Number),
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number), 
+                    article_img_url: expect.any(String), 
+                    comment_count: expect.any(String)
+                })
+              });
+        })
+    });
+    test('should return articles in descending order of created date', () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then((response) => {
+            const articles = response.body.articles
+        expect(articles).toBeSortedBy('created_at', { descending: true })
+    });
+});
+})
