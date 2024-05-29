@@ -66,7 +66,6 @@ describe('/api/articles/:article_id', () => {
         })
     });
     test('should return a 400 status code if given an invalid id', () => {
-        //error if an invalid id given, if it isn't a number
         return request(app)
         .get('/api/articles/banana')
         .expect(400)
