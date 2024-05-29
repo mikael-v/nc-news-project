@@ -30,14 +30,16 @@ describe('/api/articles/:article_id', () => {
         .expect(200)
         .then((response) => {
             const article = response.body.article
-                expect(typeof article.article_id).toBe('number');
-                expect(typeof article.title).toBe('string');
-                expect(typeof article.topic).toBe('string');
-                expect(typeof article.author).toBe('string');
-                expect(typeof article.body).toBe('string');
-                expect(typeof article.created_at).toBe('string');
-                expect(typeof article.votes).toBe('number');
-                expect(typeof article.article_img_url).toBe('string');
+            expect(article).toMatchObject({
+                article_id: 1,
+                title: expect.any(String),
+                topic: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number), 
+                article_img_url: expect.any(String), 
+            })
         })
         
     });
