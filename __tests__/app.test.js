@@ -3,9 +3,23 @@ const request = require('supertest');
 const db = require('../db/connection.js');
 const seed = require('../db/seeds/seed.js');
 const testData = require('../db/data/test-data')
+const endpoints = require('../endpoints.json');
 
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
+
+describe('/api', () => {
+    test('Returns 200 status code and responds with array containing the correct properties ', () => {
+        return request(app)
+            .get('/api')
+            .expect(200)
+            .then((response) => {
+                const result = response.body.endpoints;
+                const expected = endpoints
+                expect(result).toEqual(expected)
+            });
+    });
+});
 
 describe('/api/topics', () => {
     test('Returns 200 status code and responds with array containing the correct properties ', () => {
