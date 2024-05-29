@@ -75,7 +75,7 @@ describe('/api/articles/:article_id', () => {
     });
 });
 
-describe.only('/api/articles/:article_id/comments', () => {
+describe('/api/articles/:article_id/comments', () => {
     test('should respond with a 200 status code and an array of comments with correct properties for the given article id', () => {
         return request(app)
         .get('/api/articles/1/comments')
