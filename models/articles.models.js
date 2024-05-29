@@ -9,7 +9,6 @@ exports.selectArticles = () =>{
     ORDER BY articles.created_at DESC;
 `)
 .then((result)=>{
-        console.log(result.rows)
         return result.rows
     })
 }
