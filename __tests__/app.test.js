@@ -66,9 +66,45 @@ describe('/api/articles/:article_id', () => {
         })
     });
     test('should return a 400 status code if given an invalid id', () => {
-        //error if an invalid id given, if it isn't a number
         return request(app)
         .get('/api/articles/banana')
+        .expect(400)
+        .then((response)=>{
+            expect(response.body.msg).toBe('Bad request')
+        })
+    });
+});
+
+describe.only('/api/articles/:article_id/comments', () => {
+    test('should respond with a 200 status code and an array of comments with correct properties for the given article id', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then((response)=>{
+           const commentsArray = response.body.flat()
+           commentsArray.forEach((comment)=>{
+            expect(comment).toMatchObject({
+                article_id: 1,
+                comment_id: expect.any(Number),
+                author: expect.any(String),
+                body: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number), 
+            })
+           })
+        })
+    });
+    test('should respond with 404 status code and appropriate message if the article_id is a valid but non-existent one', () => {
+        return request(app)
+        .get('/api/articles/999/comments')
+        .expect(404)
+        .then((response)=>{
+            expect(response.body.msg).toBe('article at given id does not exist')
+        })
+    });
+    test('should return a 400 status code if given an invalid id', () => {
+        return request(app)
+        .get('/api/articles/banana/comments')
         .expect(400)
         .then((response)=>{
             expect(response.body.msg).toBe('Bad request')
