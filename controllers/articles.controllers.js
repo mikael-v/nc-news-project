@@ -1,15 +1,27 @@
-const { selectArticles, selectArticleById, selectCommentsById, writeCommentOnArticle, changeVotes, removeComment, selectUsers }= require('../models/articles.models')
+const { selectArticles, selectArticlesByTopic, selectArticleById, selectCommentsById, writeCommentOnArticle, changeVotes, removeComment, selectUsers }= require('../models/articles.models')
+
 
 exports.getArticles = (req, res, next) => {
-    selectArticles()
-    .then((articles) => {
-        res.status(200).send({ articles });
-    })
-    .catch((err) => {
-        next(err);
-    });
+    const { topic } = req.query;
+    if (topic) {
+         selectArticlesByTopic(topic)
+            .then((articles) => {
+                res.status(200).send(articles);
+            })
+            .catch((err) => {
+                next(err)
+            })
+        }
+    else{
+        selectArticles()
+        .then((articles) => {
+            res.status(200).send({ articles });
+        })
+        .catch((err) => {
+            next(err);
+        });
+    }
 }; 
-
 
 exports.getArticleById = (req, res, next) => {
     const { article_id } = req.params
@@ -91,3 +103,4 @@ exports.getUsers = (req, res, next) =>{
         next(err);
     });
 }
+

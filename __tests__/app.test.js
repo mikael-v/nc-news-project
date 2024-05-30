@@ -315,5 +315,36 @@ describe('DELETE /api/comments/:comment_id', () => {
             })
         })
         });
-
     })
+
+    describe(' GET /api/articles?topic', () => {
+        test('should respond with a 200 status code and articles filtered by a topic', () => {
+            return request(app)
+            .get('/api/articles?topic=cats')
+            .expect(200)
+            .then((response)=>{
+            const articles = response.body
+            expect(articles.length).toBe(1);
+            articles.forEach((article) => {
+                expect(article).toMatchObject({
+                    article_id: expect.any(Number),
+                    title: expect.any(String),
+                    topic: expect.any(String),
+                    author: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number), 
+                    article_img_url: expect.any(String), 
+                    comment_count: expect.any(String)
+                })
+            });
+        })
+    });
+    test('should respond with 404 and an appropriate message if topic is non-existent', () => {
+        return request(app)
+            .get('/api/articles?topic=horses')
+            .expect(404)
+            .then((response)=>{
+                expect(response.body.msg).toBe(`Topic not found`)
+            })
+    });
+})
