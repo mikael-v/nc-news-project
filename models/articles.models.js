@@ -1,5 +1,4 @@
 const db = require('../db/connection')
-const { includes } = require('../db/data/test-data/articles')
 
 exports.selectArticles = () =>{
     return db.query(`
