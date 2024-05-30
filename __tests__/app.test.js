@@ -148,7 +148,7 @@ describe('/api/articles/:article_id/comments', () => {
     });
 });
 
-describe.only('POST /api/articles/:article_id/comments', () => {
+describe('POST /api/articles/:article_id/comments', () => {
    test(`should respond with a 201 status code and return a comment with it's properties`, () => {
     const exampleComment = {
         username: users[0].username,
