@@ -4,6 +4,7 @@ const db = require('../db/connection.js');
 const seed = require('../db/seeds/seed.js');
 const testData = require('../db/data/test-data')
 const endpoints = require('../endpoints.json');
+const users = require('../db/data/test-data/users.js');
 require('jest-sorted')
 
 beforeEach(() => seed(testData));
@@ -116,6 +117,7 @@ describe('/api/articles/:article_id/comments', () => {
         .expect(200)
         .then((response)=>{
            const commentsArray = response.body.flat()
+           expect(commentsArray.length).toBe(11)
            commentsArray.forEach((comment)=>{
             expect(comment).toMatchObject({
                 article_id: 1,
@@ -144,4 +146,67 @@ describe('/api/articles/:article_id/comments', () => {
             expect(response.body.msg).toBe('Bad request')
         })
     });
+});
+
+describe.only('POST /api/articles/:article_id/comments', () => {
+   test(`should respond with a 201 status code and return a comment with it's properties`, () => {
+    const exampleComment = {
+        username: users[0].username,
+        body: 'This is a great project'
+    };
+   return request(app)
+   .post('/api/articles/1/comments')
+   .send(exampleComment)
+   .expect(201)
+   .then((response) => {
+    const comment = response.body.comment;
+    expect(Object.keys(comment).length).toBe(6)
+    expect(comment).toMatchObject({
+        comment_id: expect.any(Number),
+        body: exampleComment.body,
+        author: exampleComment.username,
+        article_id: 1,
+        votes: expect.any(Number),
+        created_at: expect.any(String)
+    });
+   }); 
+});
+test('should respond with a 404 status code and appropriate message if posted by a non-existent user', () => {
+    const badExampleComment = {
+        username: "non-existent user",
+        body: 'This should not post'
+    };
+    return request(app)
+   .post('/api/articles/2/comments')
+   .send(badExampleComment)
+   .expect(404)
+   .then((response) => {
+    expect(response.body.msg).toBe('Invalid User')
+});
+})
+test('should respond with a 400 status code if username is missing from the request', () => {
+    const badExampleNoUser = {
+        body: 'This is a great project'
+    };
+    return request(app)
+        .post('/api/articles/1/comments')
+        .send(badExampleNoUser)
+        .expect(400)
+        .then((response) => {
+            expect(response.body.msg).toBe('Bad request');
+        });  
+});
+test('should if body is missing from the request', () => {
+    const badExampleNoBody = {
+        username: users[0].username
+    };
+    return request(app)
+    .post('/api/articles/1/comments')
+    .send(badExampleNoBody)
+    .expect(400)
+    .then((response) => {
+        expect(response.body.msg).toBe('Bad request');
+    });  
+});
+    
 });

@@ -1,4 +1,4 @@
-const { selectArticles, selectArticleById, selectCommentsById }= require('../models/articles.models')
+const { selectArticles, selectArticleById, selectCommentsById, writeCommentOnArticle }= require('../models/articles.models')
 
 exports.getArticles = (req, res, next) => {
     selectArticles()
@@ -33,6 +33,25 @@ exports.getCommentsById = (req, res, next) =>{
         next(err)
     })
 }
+
+
+
+
+exports.postCommentOnArticle = (req, res, next) => {
+    const { article_id } = req.params;
+    const { username, body } = req.body;
+    if (!username || !body) {
+        return res.status(400).send({msg: 'Bad request'});
+    }
+    return writeCommentOnArticle(article_id, username, body)
+        .then((comment) => {
+            res.status(201).send({ comment });
+        })
+        .catch((err) => {
+            next(err);
+        });
+};
+
 
 
 

@@ -1,4 +1,5 @@
 const db = require('../db/connection')
+const users = require('../db/data/test-data/users')
 
 exports.selectArticles = () =>{
     return db.query(`
@@ -34,3 +35,27 @@ exports.selectCommentsById = (article_id) =>{
         return result.rows
     })
 }
+
+
+exports.writeCommentOnArticle = (article_id, username, body) => {
+    return db.query('SELECT * FROM users WHERE username = $1', [username])
+    .then((result) => {
+        if (result.rows.length === 0) {
+            return Promise.reject({ status: 404, msg: 'Invalid User' });
+        }
+        const query = `
+            INSERT INTO comments (article_id, author, body)
+            VALUES ($1, $2, $3)
+            RETURNING *;
+        `;
+        return db.query(query, [article_id, username, body]);
+    })
+    .then((result) => {
+        return result.rows[0];
+    });
+};
+
+
+
+
+  
