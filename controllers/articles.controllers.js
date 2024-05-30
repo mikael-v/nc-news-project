@@ -1,4 +1,4 @@
-const { selectArticles, selectArticleById, selectCommentsById, writeCommentOnArticle, changeVotes }= require('../models/articles.models')
+const { selectArticles, selectArticleById, selectCommentsById, writeCommentOnArticle, changeVotes, removeComment }= require('../models/articles.models')
 
 exports.getArticles = (req, res, next) => {
     selectArticles()
@@ -67,4 +67,17 @@ exports.updateVotes = (req, res, next) =>{
     });
 }
 
+exports.deleteComment = (req, res, next) =>{
+    const comment_id = req.params.comment_id
+    if(!comment_id){
+        res.status(404).send({msg: "Comment not Found"})
+    }
+    return removeComment(comment_id)
+    .then(()=>{
+        res.status(204).send({})
+    })
+    .catch((err) => {
+        next(err);
+    });
+}
 

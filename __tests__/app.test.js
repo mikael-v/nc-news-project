@@ -1,11 +1,11 @@
-const app =  require('../db/app')
+const app =  require('../db/app');
 const request = require('supertest');
 const db = require('../db/connection.js');
 const seed = require('../db/seeds/seed.js');
-const testData = require('../db/data/test-data')
+const testData = require('../db/data/test-data');
 const endpoints = require('../endpoints.json');
 const users = require('../db/data/test-data/users.js');
-require('jest-sorted')
+require('jest-sorted');
 
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
@@ -130,6 +130,16 @@ describe('/api/articles/:article_id/comments', () => {
            })
         })
     });
+    test('should return comments in order of most recently created', () => {
+        return request(app)
+        .get('/api/articles/1/comments')
+        .expect(200)
+        .then((response) => {
+            const comments = response.body.flat()
+            expect(comments).toBeSortedBy('created_at', { descending: true })
+            
+        })
+    })
     test('should respond with 404 status code and appropriate message if the article_id is a valid but non-existent one', () => {
         return request(app)
         .get('/api/articles/999/comments')
@@ -196,7 +206,7 @@ test('should respond with a 400 status code if username is missing from the requ
             expect(response.body.msg).toBe('Bad request');
         });  
 });
-test('should if body is missing from the request', () => {
+test('should respond with 400 status code and appropriate message if body is missing from the request', () => {
     const badExampleNoBody = {
         username: users[0].username
     };
@@ -276,3 +286,14 @@ describe('PATCH /api/articles/:article_id', () => {
     });
 })
 })
+
+describe('DELETE /api/comments/:comment_id', () => {
+    test('should respond with a 204 code and no content', () => {
+        return request(app)
+        .delete('/api/comments/1')
+        .expect(204)
+        .then((response)=>{
+            expect(response.body).toEqual({})
+        })
+    });
+    });
