@@ -305,7 +305,7 @@ describe('DELETE /api/comments/:comment_id', () => {
            .expect(200)
            .then((response)=>{
             const users = response.body
-            console.log(users)
+            console.log(JSON.stringify(users))
             expect(users.length).toBe(4)
             users.forEach((user)=>{
                 expect(user).toMatchObject({
