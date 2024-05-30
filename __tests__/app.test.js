@@ -210,3 +210,69 @@ test('should if body is missing from the request', () => {
 });
     
 });
+
+
+describe('PATCH /api/articles/:article_id', () => {
+    test('should respond with a 200 status code and an updated article with new votes', () => {
+       const exampleVotes = {inc_votes: 5} 
+       return request(app)
+       .patch('/api/articles/1')
+       .send(exampleVotes)
+       .expect(200)
+       .then((response)=>{
+        const newArticle = response.body.newArticle
+        expect(newArticle.length).toBe(1)
+        expect(newArticle[0]).toMatchObject({
+            article_id: 1,
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: 105,
+            article_img_url: expect.any(String)
+        });
+       })
+    });
+    test('should reduce voted when given a negative number', () => {
+        const exampleVotes = {inc_votes: -5} 
+        return request(app)
+        .patch('/api/articles/1')
+        .send(exampleVotes)
+        .expect(200)
+        .then((response)=>{
+         const newArticle = response.body.newArticle
+         expect(newArticle.length).toBe(1)
+         expect(newArticle[0]).toMatchObject({
+             article_id: 1,
+             title: expect.any(String),
+             topic: expect.any(String),
+             author: expect.any(String),
+             body: expect.any(String),
+             created_at: expect.any(String),
+             votes: 95,
+             article_img_url: expect.any(String)
+         });
+        })
+    });
+    test(`should respond with a 400 error code and appropriate message if the value of inc_votes isn't a number`, () => {
+        const exampleVotes = {inc_votes: 'banana'} 
+       return request(app)
+       .patch('/api/articles/1')
+       .send(exampleVotes)
+       .expect(400)
+       .then((response)=>{
+        expect(response.body.msg).toBe('Bad request')
+       })
+    });
+    test('should respond with a 404 error code and appropriate message if the value of inc_votes is non-existent/undefined', () => {
+        const exampleVotes = {} 
+        return request(app)
+        .patch('/api/articles/1')
+        .send(exampleVotes)
+        .expect(404)
+        .then((response)=>{
+         expect(response.body.msg).toBe('Not Found')
+    });
+})
+})

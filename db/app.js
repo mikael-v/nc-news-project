@@ -4,7 +4,7 @@ app.use(express.json());
 
 const { getApis } = require('../controllers/api.controllers')
 const { getTopics } = require('../controllers/topics.controllers')
-const { getArticles, getArticleById, getCommentsById, postCommentOnArticle } = require('../controllers/articles.controllers')
+const { getArticles, getArticleById, getCommentsById, postCommentOnArticle, updateVotes } = require('../controllers/articles.controllers')
 
 
 app.get('/api', getApis)
@@ -17,6 +17,8 @@ app.get('/api/articles/:article_id/comments', getCommentsById)
 
 
 app.post('/api/articles/:article_id/comments', postCommentOnArticle);
+
+app.patch('/api/articles/:article_id', updateVotes)
 
 
 app.use((err, req, res, next)=>{

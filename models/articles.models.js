@@ -1,5 +1,5 @@
 const db = require('../db/connection')
-const users = require('../db/data/test-data/users')
+const { includes } = require('../db/data/test-data/articles')
 
 exports.selectArticles = () =>{
     return db.query(`
@@ -55,7 +55,13 @@ exports.writeCommentOnArticle = (article_id, username, body) => {
     });
 };
 
+exports.changeVotes = ({ inc_votes: newVote }, article_id)=>{
+        return db.query(`UPDATE articles SET votes = votes + $1 WHERE articles.article_id = $2 RETURNING *;` , [newVote, article_id])
+        .then((result)=>{
+            return result.rows
+        })
 
+}
 
 
   
