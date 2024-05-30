@@ -23,7 +23,6 @@ exports.selectArticlesByTopic = (topic) => {
         GROUP BY  articles.article_id
     `, [topic])
     .then((result) => {
-        console.log(result)
          if( result.rows.length === 0){
             return Promise.reject({status: 404, msg: 'Topic not found'})
         }
