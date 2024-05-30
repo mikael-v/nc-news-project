@@ -4,14 +4,14 @@ app.use(express.json());
 
 const { getApis } = require('../controllers/api.controllers')
 const { getTopics } = require('../controllers/topics.controllers')
-const { getArticles, getArticleById, getCommentsById, postCommentOnArticle, updateVotes, deleteComment } = require('../controllers/articles.controllers')
+const { getArticles, getArticleById, getCommentsById, postCommentOnArticle, updateVotes, deleteComment, getUsers } = require('../controllers/articles.controllers')
 
 
 app.get('/api', getApis)
-
 app.get('/api/topics', getTopics)
-
 app.get('/api/articles', getArticles)
+app.get('/api/users', getUsers)
+
 app.get('/api/articles/:article_id', getArticleById)
 app.get('/api/articles/:article_id/comments', getCommentsById)
 

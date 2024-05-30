@@ -297,3 +297,24 @@ describe('DELETE /api/comments/:comment_id', () => {
         })
     });
     });
+
+    describe('GET /api/users', () => {
+        test('should return a 200 status code and respond with an array containing the correct properties ', () => {
+           return request(app)
+           .get('/api/users')
+           .expect(200)
+           .then((response)=>{
+            const users = response.body
+            console.log(users)
+            expect(users.length).toBe(4)
+            users.forEach((user)=>{
+                expect(user).toMatchObject({
+                    username: expect.any(String),
+                    name: expect.any(String),
+                    avatar_url: expect.any(String)
+                })
+            })
+        })
+        });
+
+    })

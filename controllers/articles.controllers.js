@@ -1,4 +1,4 @@
-const { selectArticles, selectArticleById, selectCommentsById, writeCommentOnArticle, changeVotes, removeComment }= require('../models/articles.models')
+const { selectArticles, selectArticleById, selectCommentsById, writeCommentOnArticle, changeVotes, removeComment, selectUsers }= require('../models/articles.models')
 
 exports.getArticles = (req, res, next) => {
     selectArticles()
@@ -81,3 +81,13 @@ exports.deleteComment = (req, res, next) =>{
     });
 }
 
+
+exports.getUsers = (req, res, next) =>{
+    selectUsers()
+    .then((users) => {
+        res.status(200).send(users);
+    })
+    .catch((err) => {
+        next(err);
+    });
+}
