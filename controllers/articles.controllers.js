@@ -24,16 +24,15 @@ exports.getArticles = (req, res, next) => {
 }; 
 
 exports.getArticleById = (req, res, next) => {
-    const { article_id } = req.params
+    const { article_id } = req.params;
     selectArticleById(article_id)
-    .then((article)=>{
-        res.status(200).send({article})
+    .then((article) => {
+        res.status(200).send({ article });
     })
-    .catch((err) =>{
-        next(err)
-    })
-    
-}
+    .catch((err) => {
+        next(err);
+    });
+};
 
 exports.getCommentsById = (req, res, next) =>{
     const { article_id } = req.params
@@ -45,9 +44,6 @@ exports.getCommentsById = (req, res, next) =>{
         next(err)
     })
 }
-
-
-
 
 exports.postCommentOnArticle = (req, res, next) => {
     const { article_id } = req.params;
@@ -103,4 +99,5 @@ exports.getUsers = (req, res, next) =>{
         next(err);
     });
 }
+
 
