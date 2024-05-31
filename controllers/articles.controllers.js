@@ -1,27 +1,38 @@
-const { selectArticles, selectArticleById, selectCommentsById, writeCommentOnArticle, changeVotes, removeComment, selectUsers }= require('../models/articles.models')
+const { selectArticles, selectArticlesByTopic, selectArticleById, selectCommentsById, writeCommentOnArticle, changeVotes, removeComment, selectUsers }= require('../models/articles.models')
+
 
 exports.getArticles = (req, res, next) => {
-    selectArticles()
-    .then((articles) => {
-        res.status(200).send({ articles });
+    const { topic } = req.query;
+    if (topic) {
+         selectArticlesByTopic(topic)
+            .then((articles) => {
+                res.status(200).send(articles);
+            })
+            .catch((err) => {
+                next(err)
+            })
+        }
+    else{
+        selectArticles()
+        .then((articles) => {
+            res.status(200).send({ articles });
+        })
+        .catch((err) => {
+            next(err);
+        });
+    }
+}; 
+
+exports.getArticleById = (req, res, next) => {
+    const { article_id } = req.params;
+    selectArticleById(article_id)
+    .then((article) => {
+        res.status(200).send({ article });
     })
     .catch((err) => {
         next(err);
     });
-}; 
-
-
-exports.getArticleById = (req, res, next) => {
-    const { article_id } = req.params
-    selectArticleById(article_id)
-    .then((article)=>{
-        res.status(200).send({article})
-    })
-    .catch((err) =>{
-        next(err)
-    })
-    
-}
+};
 
 exports.getCommentsById = (req, res, next) =>{
     const { article_id } = req.params
@@ -33,9 +44,6 @@ exports.getCommentsById = (req, res, next) =>{
         next(err)
     })
 }
-
-
-
 
 exports.postCommentOnArticle = (req, res, next) => {
     const { article_id } = req.params;
@@ -91,3 +99,4 @@ exports.getUsers = (req, res, next) =>{
         next(err);
     });
 }
+
